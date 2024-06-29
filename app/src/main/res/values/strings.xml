@@ -1,3 +1,35 @@
 <resources>
     <string name="app_name">HistoryQuiz</string>
+    <string-array name="level_date_1">
+        <item>"1945"</item>
+        <item>"1949"</item>
+        <item>"1953"</item>
+        <item>"1961"</item>
+        <item>"1989"</item>
+        <item>"1990"</item>
+    </string-array>
+    <string-array name="level_event_1">
+        <item>"Ende 2. WK"</item>
+        <item>"Gründung BRD&amp;DDR"</item>
+        <item>"Aufstand in der DDR"</item>
+        <item>"Mauerbau"</item>
+        <item>"Mauerfall"</item>
+        <item>"Wiedervereinigung"</item>
+    </string-array>
+    <string-array name="level_date_2">
+        <item>"1765"</item>
+        <item>"1770"</item>
+        <item>"1773"</item>
+        <item>"1775"</item>
+        <item>"1776"</item>
+        <item>"1783"</item>
+    </string-array>
+    <string-array name="level_event_2">
+        <item>"Stamp Act"</item>
+        <item>"Boston Massacre"</item>
+        <item>"Boston Tea Party"</item>
+        <item>"Schlachten von\nLexington und Concord"</item>
+        <item>"Unabhängigkeits-\nerklärung"</item>
+        <item>"Ende des Krieges"</item>
+    </string-array>
 </resources>
