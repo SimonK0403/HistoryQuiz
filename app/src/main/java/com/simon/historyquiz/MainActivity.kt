@@ -2,31 +2,35 @@ package com.simon.historyquiz
 
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.DragEvent
 import android.view.Gravity
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-
+import androidx.core.view.allViews
 
 
 class MainActivity : AppCompatActivity() {
     private fun dpToPx(dp: Int) :Int {
         return (dp * resources.displayMetrics.density).toInt()
     }
-    val historyDate = listOf("a","b","c","d","e","f")
-    val historyEvent = listOf("1","2","3","4","5","6")
+    private val solutions = HashMap<String, String>()
+    private val historyDate = listOf("1945","1949","1953","1961","1989","1990")
+    private val historyEvent = listOf("Ende 2. WK","Gründung BRD&DDR","Aufstand in der DDR","Mauerbau","Mauerfall","Wiedervereinigung")
     override fun onCreate(savedInstanceState: Bundle?) {
         // basic stuff:
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        //Lösungen befüllen
+        repeat(historyDate.size) {i ->
+            solutions[historyDate[i]] = historyEvent[i]
+        }
+
         val dragArea: LinearLayout = findViewById(R.id.DragArea)
         val dropArea: LinearLayout = findViewById(R.id.dropArea)
-        initDragArea(this, dragArea)
+        initDragArea(dragArea)
         initDropArea(this, dropArea)
         for (i in 0 until dragArea.childCount){
             val child = dragArea.getChildAt(i)
@@ -50,7 +54,7 @@ class MainActivity : AppCompatActivity() {
                         true
                     }
                     DragEvent.ACTION_DRAG_EXITED -> {
-                        v.setBackgroundColor(Color.GRAY)
+                        v.setBackgroundColor(getColor(R.color.teal_700))
                         v.invalidate()
                         true
                     }
@@ -62,17 +66,27 @@ class MainActivity : AppCompatActivity() {
                             owner.removeView(draggedView)
                             v.removeView(v.getChildAt(0))
                             v.addView(draggedView)
-                            v.getChildAt(0).setOnClickListener {
-                                val self = v.getChildAt(0)
-                                v.removeView(self)
-                                owner.addView(self)
+                            draggedView.setOnClickListener {
+                                v.removeView(draggedView)
+                                owner.addView(draggedView)
                                 v.addView(TextView(this).apply {
-                                    text = historyDate.get(i)
+                                    text = historyDate[i]
+                                    v.setBackgroundColor(getColor(R.color.teal_700))
                                 })
                                // Toast.makeText(this, "xx", Toast.LENGTH_SHORT).show()
                             }
+
+                            val event = (draggedView.allViews.toList()[0] as TextView).text.toString()
+                            val year = historyDate[i]
+
+                            if(solutions[year] == event) {
+                                v.setBackgroundColor(Color.GREEN)
+                            } else {
+                                v.setBackgroundColor(Color.RED)
+                            }
+
                             true
-                        }else{
+                        } else{
                             v.invalidate()
                             false
                         }
@@ -89,7 +103,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun initDragArea(mainActivity: MainActivity, dragArea: LinearLayout) {
+    private fun initDragArea(dragArea: LinearLayout) {
     // Erstelle Textviews
         repeat(6) { i ->
             val textView = TextView(this).apply {
@@ -98,7 +112,7 @@ class MainActivity : AppCompatActivity() {
                     dpToPx(150), // height in dp
                     1f // weight
                 )
-                text = "DragElement ${i + 1}"
+                text = historyEvent[i]
                 id = View.generateViewId() // Generate unique ID für jede TextView
                 gravity = Gravity.CENTER
                 setBackgroundColor(getColor(R.color.purple_200))
@@ -128,7 +142,7 @@ class MainActivity : AppCompatActivity() {
                     1f // weight
                 )
                 val textView = TextView(mainActivity).apply {
-                    text = historyDate.get(i)
+                    text = historyDate[i]
                 }
                 this.addView(textView)
                 id = View.generateViewId() // Generate unique ID für jede TextView
