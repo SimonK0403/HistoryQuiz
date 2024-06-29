@@ -8,6 +8,7 @@ import android.view.Gravity
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 
 
@@ -61,6 +62,15 @@ class MainActivity : AppCompatActivity() {
                             owner.removeView(draggedView)
                             v.removeView(v.getChildAt(0))
                             v.addView(draggedView)
+                            v.getChildAt(0).setOnClickListener {
+                                val self = v.getChildAt(0)
+                                v.removeView(self)
+                                owner.addView(self)
+                                v.addView(TextView(this).apply {
+                                    text = historyDate.get(i)
+                                })
+                               // Toast.makeText(this, "xx", Toast.LENGTH_SHORT).show()
+                            }
                             true
                         }else{
                             v.invalidate()
