@@ -2,7 +2,6 @@ package com.simon.historyquiz
 
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.DragEvent
 import android.view.Gravity
 import android.view.View
@@ -11,8 +10,6 @@ import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.allViews
-import androidx.core.view.setPadding
-
 
 class MainActivity : AppCompatActivity() {
     private var solutions = HashMap<String, String>()
@@ -41,8 +38,6 @@ class MainActivity : AppCompatActivity() {
 
         initDropArea(this, dropArea)
         initDropListener(dropArea)
-
-
     }
 
     private fun dpToPx(dp: Int) :Int {
@@ -100,7 +95,6 @@ class MainActivity : AppCompatActivity() {
                                 v.setBackgroundColor(Color.RED)
                             }
                             if (owner.childCount == 0){
-                                Log.v("empty","list is empty")
                                 val allTextViews = (v.parent as LinearLayout).allViews.toList().filterIsInstance<TextView>()
                                 var flag = true
                                 repeat(allTextViews.size) { i ->
