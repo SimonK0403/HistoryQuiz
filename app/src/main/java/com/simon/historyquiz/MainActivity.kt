@@ -23,7 +23,7 @@ class MainActivity : AppCompatActivity() {
         // basic stuff:
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        getSupportActionBar()!!.setTitle("${resources.getString(R.string.app_name)} - Level ${level}")
+        supportActionBar!!.title = "${resources.getString(R.string.app_name)} - Level $level"
         historyDate  = resources.getStringArray(R.array.level_date_1)
         historyEvent = resources.getStringArray(R.array.level_event_1)
 
@@ -103,7 +103,7 @@ class MainActivity : AppCompatActivity() {
                                     }
                                 }
                                 if (flag){
-                                    var dialog: AlertDialog
+                                    val dialog: AlertDialog
                                     val builder = AlertDialog.Builder(this)
                                     if (level == 1){
                                         builder.setTitle("Nächstes Level")
@@ -120,7 +120,7 @@ class MainActivity : AppCompatActivity() {
                                             initDragListener(findViewById(R.id.DragArea))
                                             initDropArea(this,findViewById( R.id.dropArea))
                                             initDropListener(findViewById( R.id.dropArea))
-                                            getSupportActionBar()!!.setTitle("${resources.getString(R.string.app_name)} - Level ${level}")
+                                            supportActionBar!!.title = "${resources.getString(R.string.app_name)} - Level $level"
                                         }
                                     }else {
                                         builder.setTitle("Danke fürs Spielen")
@@ -181,8 +181,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initDragArea(dragArea: LinearLayout) {
-        var shuffleHistoryEvents  = historyEvent.toMutableList().shuffled().toTypedArray()
-    // Erstelle Textviews
+        val shuffleHistoryEvents  = historyEvent.toMutableList().shuffled().toTypedArray()
+        // Erstelle Textviews
         val spacingInPixels = dpToPx(20) // 16dp
         repeat(6) { i ->
             val textView = TextView(this).apply {
