@@ -20,6 +20,7 @@
             android:id="@+id/DragArea"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:gravity="center_vertical"
             android:orientation="horizontal">
             <!--Hier werden die drag Elemente on creat generiert-->
         </LinearLayout>

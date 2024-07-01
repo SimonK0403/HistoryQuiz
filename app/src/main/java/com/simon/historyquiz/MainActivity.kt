@@ -1,7 +1,9 @@
 package com.simon.historyquiz
 
 import android.graphics.Color
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
+import android.text.Layout
 import android.view.DragEvent
 import android.view.Gravity
 import android.view.View
@@ -9,6 +11,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.allViews
 
 class MainActivity : AppCompatActivity() {
@@ -30,18 +33,24 @@ class MainActivity : AppCompatActivity() {
         //Lösungen befüllen
         setSolutionMap()
 
+        // init scrollable drag item list
         dragArea = findViewById(R.id.DragArea)
-        dropArea = findViewById(R.id.dropArea)
-
-        initDragArea(dragArea)
+        initDragArea(dragArea, getColor(R.color.purple_200))
         initDragListener(dragArea)
 
-        initDropArea(this, dropArea)
+        // init scrollable drop area list
+        dropArea = findViewById(R.id.dropArea)
+        initDropArea(dropArea)
         initDropListener(dropArea)
     }
 
     private fun dpToPx(dp: Int) :Int {
         return (dp * resources.displayMetrics.density).toInt()
+    }
+
+    private fun changeShapeColor(view: View, color: Int) {
+        val drawable = view.background as? GradientDrawable
+        drawable?.setColor(color)
     }
 
     private fun setSolutionMap() {
@@ -56,16 +65,16 @@ class MainActivity : AppCompatActivity() {
             child.setOnDragListener{ v, e ->
                 when(e.action) {
                     DragEvent.ACTION_DRAG_STARTED -> {
-                        v.setBackgroundColor(getColor(R.color.teal_700))
+                        changeShapeColor(v, getColor(R.color.teal_700))
                         true
                     }
                     DragEvent.ACTION_DRAG_ENTERED -> {
-                        v.setBackgroundColor(Color.BLUE)
+                        changeShapeColor(v, getColor(R.color.blue_700))
                         v.invalidate()
                         true
                     }
                     DragEvent.ACTION_DRAG_EXITED -> {
-                        v.setBackgroundColor(getColor(R.color.teal_700))
+                        changeShapeColor(v, getColor(R.color.teal_700))
                         v.invalidate()
                         true
                     }
@@ -82,7 +91,8 @@ class MainActivity : AppCompatActivity() {
                                 findViewById<LinearLayout>(R.id.DragArea).addView(draggedView)
                                 v.addView(TextView(this).apply {
                                     text = historyDate[i]
-                                    v.setBackgroundColor(getColor(R.color.teal_700))
+                                    changeShapeColor(v, getColor(R.color.teal_700))
+                                    textSize = 40.0F
                                 })
                             }
                             // evaluate drag & drop
@@ -90,9 +100,9 @@ class MainActivity : AppCompatActivity() {
                             val year = historyDate[i]
 
                             if(solutions[year] == event) {
-                                v.setBackgroundColor(Color.GREEN)
+                                changeShapeColor(v, getColor(R.color.signal_green))
                             } else {
-                                v.setBackgroundColor(Color.RED)
+                                changeShapeColor(v, getColor(R.color.red_500))
                             }
                             if (owner.childCount == 0){
                                 val allTextViews = (v.parent as LinearLayout).allViews.toList().filterIsInstance<TextView>()
@@ -102,7 +112,7 @@ class MainActivity : AppCompatActivity() {
                                         flag = false
                                     }
                                 }
-                                if (flag){
+                                if (flag){// Alertdialog when all is correct
                                     val dialog: AlertDialog
                                     val builder = AlertDialog.Builder(this)
                                     if (level == 1){
@@ -113,12 +123,14 @@ class MainActivity : AppCompatActivity() {
                                             historyDate = resources.getStringArray(R.array.level_date_2)
                                             historyEvent = resources.getStringArray(R.array.level_event_2)
                                             solutions.clear()
-                                            dropArea.removeAllViews()
-                                            dropArea.removeAllViews()
                                             setSolutionMap()
-                                            initDragArea(findViewById(R.id.DragArea))
+                                            //re-init drag item list
+                                            dropArea.removeAllViews()
+                                            initDragArea(findViewById(R.id.DragArea) , getColor(R.color.purple_200))//different drag item colors possible
                                             initDragListener(findViewById(R.id.DragArea))
-                                            initDropArea(this,findViewById( R.id.dropArea))
+                                            // re-init drop areas
+                                            dropArea.removeAllViews()
+                                            initDropArea(findViewById( R.id.dropArea))
                                             initDropListener(findViewById( R.id.dropArea))
                                             supportActionBar!!.title = "${resources.getString(R.string.app_name)} - Level $level"
                                         }
@@ -132,13 +144,12 @@ class MainActivity : AppCompatActivity() {
                                     dialog = builder.create()
                                     dialog.show()
                                     dialog.getButton(AlertDialog.BUTTON_NEUTRAL).apply {
-                                        setTextColor(resources.getColor(R.color.red_500))
+                                        setTextColor(getColor(R.color.red_500))
                                         textAlignment = left
                                     }
                                     dialog.getButton(AlertDialog.BUTTON_POSITIVE).apply {
-                                        setTextColor(resources.getColor(R.color.green))
+                                        setTextColor(getColor(R.color.green))
                                     }
-
                                 }
                             }
                             true
@@ -155,15 +166,14 @@ class MainActivity : AppCompatActivity() {
                             if(t.getChildAt(0) == null){
                                 t.addView(TextView(this).apply {
                                     text = historyDate[index-1]
-                                    v.setBackgroundColor(getColor(R.color.teal_700))
+                                    changeShapeColor(v, getColor(R.color.teal_700))
+                                    textSize = 40.0F
                                 })
                             }
                         }
                         true
                     }
-                    else -> {
-                        false
-                    }
+                    else -> false
                 }
             }
         }
@@ -180,11 +190,11 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun initDragArea(dragArea: LinearLayout) {
+    private fun initDragArea(dragArea: LinearLayout, color: Int) {
         val shuffleHistoryEvents  = historyEvent.toMutableList().shuffled().toTypedArray()
         // Erstelle Textviews
         val spacingInPixels = dpToPx(20) // 16dp
-        repeat(6) { i ->
+        repeat(historyEvent.size) { i ->
             val textView = TextView(this).apply {
                 layoutParams = LinearLayout.LayoutParams(
                     dpToPx(150), // width in dp
@@ -192,9 +202,11 @@ class MainActivity : AppCompatActivity() {
                     1f // weight
                 )
                 text = shuffleHistoryEvents[i] // historyEvent[i]
+                hyphenationFrequency = Layout.HYPHENATION_FREQUENCY_FULL
                 id = View.generateViewId() // Generate unique ID für jede TextView
                 gravity = Gravity.CENTER
-                setBackgroundColor(getColor(R.color.purple_200))
+                background = ContextCompat.getDrawable(this@MainActivity ,R.drawable.rounded_rectangle)
+                changeShapeColor(this, color )
                 setPadding(-spacingInPixels,-spacingInPixels,-spacingInPixels,-spacingInPixels)
             }
             dragArea.addView(textView)
@@ -210,22 +222,24 @@ class MainActivity : AppCompatActivity() {
             child.layoutParams = params
         }
     }
-    private fun initDropArea(mainActivity: MainActivity, dropArea: LinearLayout) {
+    private fun initDropArea(dropArea: LinearLayout) {
         // Erstelle Textviews
-        repeat(6) { i ->
+        repeat(historyDate.size) { i ->
             val listView = LinearLayout(this).apply {
                 layoutParams = LinearLayout.LayoutParams(
                     dpToPx(200), // width in dp
                     dpToPx(200), // height in dp
                     1f // weight
                 )
-                val textView = TextView(mainActivity).apply {
+                val textView = TextView(this@MainActivity).apply {
                     text = historyDate[i]
+                    textSize = 40.0F
                 }
                 this.addView(textView)
                 id = View.generateViewId() // Generate unique ID für jede TextView
                 gravity = Gravity.CENTER
-                setBackgroundColor(getColor(R.color.teal_700))
+                background = ContextCompat.getDrawable(this@MainActivity ,R.drawable.rounded_rectangle)
+                changeShapeColor(this, getColor(R.color.teal_700))
             }
             dropArea.addView(listView)
         }
