@@ -32,4 +32,11 @@
         <item>"Unabhängigkeits-\nerklärung"</item>
         <item>"Ende des Krieges"</item>
     </string-array>
+    <string name="next_level">Nächstes Level</string>
+    <string name="continue_or_not">Möchtest du weiterspielen?</string>
+    <string name="continue_yes">Ja, weiter</string>
+    <string name="continue_no">Spiel beenden</string>
+    <string name="thanks_for_playing">Danke fürs Spielen</string>
+    <string name="no_levels_available">Aktuell sind keine weitere Level erhältlich</string>
+
 </resources>

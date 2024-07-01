@@ -106,9 +106,9 @@ class MainActivity : AppCompatActivity() {
                                     val dialog: AlertDialog
                                     val builder = AlertDialog.Builder(this)
                                     if (level == 1){
-                                        builder.setTitle("Nächstes Level")
-                                        builder.setMessage("Möchtest du weiterspielen?")
-                                        builder.setPositiveButton("JA, weiter"){ _, _ ->
+                                        builder.setTitle(resources.getString(R.string.next_level))
+                                        builder.setMessage(resources.getString(R.string.continue_or_not))
+                                        builder.setPositiveButton(resources.getString(R.string.continue_yes)){ _, _ ->
                                             level++
                                             historyDate = resources.getStringArray(R.array.level_date_2)
                                             historyEvent = resources.getStringArray(R.array.level_event_2)
@@ -123,10 +123,10 @@ class MainActivity : AppCompatActivity() {
                                             supportActionBar!!.title = "${resources.getString(R.string.app_name)} - Level $level"
                                         }
                                     }else {
-                                        builder.setTitle("Danke fürs Spielen")
-                                        builder.setMessage("Aktuell sind keine weitere Level erhältlich")
+                                        builder.setTitle(resources.getString(R.string.thanks_for_playing))
+                                        builder.setMessage(resources.getString(R.string.no_levels_available))
                                     }
-                                    builder.setNeutralButton("Spiel Beenden" ){_,_ ->
+                                    builder.setNeutralButton(resources.getString(R.string.continue_no)){_,_ ->
                                         this.finish()
                                     }
                                     dialog = builder.create()
